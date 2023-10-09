@@ -13,36 +13,37 @@ import org.http4s.implicits._
 
 case class User(name: String, age: Int)
 
+val stringDummy = "Hello, world!"
+val intDummy = 123
+val listDummy = (1 to 100000).toArray
+val mapDummy = (1 to 100000).map(i => s"key$i" -> i).toMap
+val userDummy = User("Alice", 20)
+
 object Http4scborexerciseRoutes:
   def jsonRoutes(): HttpRoutes[IO] =
     import org.http4s.circe.CirceEntityEncoder._
     HttpRoutes.of[IO] { case GET -> Root / "json" / typ =>
       typ match {
         case "string" =>
-          val v = "Hello, world!"
           for {
-            resp <- Ok(v.asJson)
+            resp <- Ok(stringDummy.asJson)
           } yield resp
         case "int" =>
-          val v = 123
           for {
-            resp <- Ok(v.asJson)
+            resp <- Ok(intDummy.asJson)
           } yield resp
         case "list" =>
-          val v = List(1, 2, 3)
           for {
-            resp <- Ok(v.asJson)
+            resp <- Ok(listDummy.asJson)
           } yield resp
         case "map" =>
-          val v = Map("a" -> 1, "b" -> 2, "c" -> 3)
           for {
-            resp <- Ok(v.asJson)
+            resp <- Ok(mapDummy.asJson)
           } yield resp
         case "user" =>
           import io.circe.generic.auto._
-          val v = User("Alice", 20)
           for {
-            resp <- Ok(v.asJson)
+            resp <- Ok(userDummy.asJson)
           } yield resp
       }
     }
@@ -55,32 +56,27 @@ object Http4scborexerciseRoutes:
         case "string" =>
           for {
             v <- req.as[String]
-            _ <- IO.println(v)
             resp <- Ok(v.asJson)
           } yield resp
         case "int" =>
           for {
             v <- req.as[Int]
-            _ <- IO.println(v)
             resp <- Ok(v.asJson)
           } yield resp
         case "list" =>
           for {
-            v <- req.as[List[Int]]
-            _ <- IO.println(v)
+            v <- req.as[Array[Int]]
             resp <- Ok(v.asJson)
           } yield resp
         case "map" =>
           for {
             v <- req.as[Map[String, Int]]
-            _ <- IO.println(v)
             resp <- Ok(v.asJson)
           } yield resp
         case "user" =>
           import io.circe.generic.auto._
           for {
             v <- req.as[User]
-            _ <- IO.println(v)
             resp <- Ok(v.asJson)
           } yield resp
       }
@@ -91,39 +87,34 @@ object Http4scborexerciseRoutes:
     HttpRoutes.of[IO] { case GET -> Root / "cbor" / typ =>
       typ match {
         case "string" =>
-          val v = "Hello, world!"
           for {
-            resp <- Ok(v).map(
+            resp <- Ok(stringDummy).map(
               _.withContentType(cborContentType)
             )
           } yield resp
         case "int" =>
-          val v = 123
           for {
-            resp <- Ok(v).map(
+            resp <- Ok(intDummy).map(
               _.withContentType(cborContentType)
             )
           } yield resp
         case "list" =>
-          val v = List(1, 2, 3)
           for {
-            resp <- Ok(v).map(
+            resp <- Ok(listDummy).map(
               _.withContentType(cborContentType)
             )
           } yield resp
         case "map" =>
-          val v = Map("a" -> 1, "b" -> 2, "c" -> 3)
           for {
-            resp <- Ok(v).map(
+            resp <- Ok(mapDummy).map(
               _.withContentType(cborContentType)
             )
           } yield resp
         case "user" =>
           import io.bullet.borer.derivation.MapBasedCodecs._
           given Encoder[User] = deriveEncoder[User]
-          val v = User("Alice", 20)
           for {
-            resp <- Ok(v).map(
+            resp <- Ok(userDummy).map(
               _.withContentType(cborContentType)
             )
           } yield resp
@@ -137,7 +128,6 @@ object Http4scborexerciseRoutes:
         case "string" =>
           for {
             v <- req.as[String]
-            _ <- IO.println(v)
             resp <- Ok(v).map(
               _.withContentType(cborContentType)
             )
@@ -145,15 +135,13 @@ object Http4scborexerciseRoutes:
         case "int" =>
           for {
             v <- req.as[Int]
-            _ <- IO.println(v)
             resp <- Ok(v).map(
               _.withContentType(cborContentType)
             )
           } yield resp
         case "list" =>
           for {
-            v <- req.as[List[Int]]
-            _ <- IO.println(v)
+            v <- req.as[Array[Int]]
             resp <- Ok(v).map(
               _.withContentType(cborContentType)
             )
@@ -161,7 +149,6 @@ object Http4scborexerciseRoutes:
         case "map" =>
           for {
             v <- req.as[Map[String, Int]]
-            _ <- IO.println(v)
             resp <- Ok(v).map(
               _.withContentType(cborContentType)
             )
@@ -172,7 +159,6 @@ object Http4scborexerciseRoutes:
           given Encoder[User] = deriveEncoder[User]
           for {
             v <- req.as[User]
-            _ <- IO.println(v)
             resp <- Ok(v).map(
               _.withContentType(cborContentType)
             )
