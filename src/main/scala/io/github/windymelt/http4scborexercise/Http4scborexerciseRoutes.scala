@@ -13,8 +13,8 @@ import org.http4s.implicits._
 
 case class User(name: String, age: Int)
 
-val stringDummy = "Hello, world!"
-val intDummy = 123
+val stringDummy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ex risus, vehicula nec est ut, imperdiet elementum felis. Proin justo ex, dignissim non erat nec, viverra fermentum enim. Pellentesque ullamcorper felis sit amet arcu placerat, a vulputate augue."
+val intDummy = 1234567890
 val listDummy = (1 to 100000).toArray
 val mapDummy = (1 to 100000).map(i => s"key$i" -> i).toMap
 val userDummy = User("Alice", 20)
